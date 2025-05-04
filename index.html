@@ -15,35 +15,65 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 16px;
-            background-color: #f8f9fa;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            background-image: url('./anueldhose.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
         }
 
         .container {
             width: 100%;
             max-width: 600px;
-            margin: 0 auto;
+            margin-top: 45vh; /* Added margin to push container down */
             padding: 20px;
+            background-color: rgba(255, 255, 255, 0.65);
+            border-radius: 16px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
         }
 
         h1 {
             color: #1a1a1a;
             margin: 20px 0;
-            font-size: 28px;
+            font-size: 32px;
             text-align: center;
             font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
         }
 
         .location-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.75);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .location-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
         .location-details {
@@ -51,15 +81,17 @@
         }
 
         .location-details h2 {
-            color: #2c3e50;
-            font-size: 22px;
+            color: #1a1a1a;
+            font-size: 24px;
             margin-bottom: 8px;
+            font-weight: 600;
         }
 
         .location-details p {
-            color: #666;
+            color: #333;
             font-size: 16px;
             margin-bottom: 16px;
+            line-height: 1.5;
         }
 
         .location-button {
@@ -67,7 +99,7 @@
             width: 100%;
             padding: 16px;
             font-size: 16px;
-            background-color: #4CAF50;
+            background-color: #2ecc71;
             color: white;
             text-decoration: none;
             border-radius: 8px;
@@ -75,12 +107,15 @@
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .location-button:hover, .location-button:focus {
-            background-color: #45a049;
+            background-color: #27ae60;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
         }
 
         @media (max-width: 480px) {
@@ -90,10 +125,11 @@
 
             .container {
                 padding: 12px;
+                margin-top: 40vh; /* Adjusted for mobile */
             }
 
             h1 {
-                font-size: 24px;
+                font-size: 28px;
                 margin: 16px 0;
             }
 
@@ -103,11 +139,11 @@
             }
 
             .location-details h2 {
-                font-size: 20px;
+                font-size: 22px;
             }
 
             .location-details p {
-                font-size: 14px;
+                font-size: 15px;
             }
 
             .location-button {
