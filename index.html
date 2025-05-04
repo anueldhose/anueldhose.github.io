@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Locations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 16px;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #1a1a1a;
+            margin: 20px 0;
+            font-size: 28px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .location-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        .location-details {
+            margin-bottom: 16px;
+        }
+
+        .location-details h2 {
+            color: #2c3e50;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .location-details p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .location-button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .location-button:hover, .location-button:focus {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin: 16px 0;
+            }
+
+            .location-card {
+                padding: 16px;
+                margin-bottom: 16px;
+            }
+
+            .location-details h2 {
+                font-size: 20px;
+            }
+
+            .location-details p {
+                font-size: 14px;
+            }
+
+            .location-button {
+                padding: 14px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wedding Locations</h1>
+        
+        <div class="location-card">
+            <div class="location-details">
+                <h2>Wedding Ceremony</h2>
+                <p>St. Mary's Church, Thuruthiply</p>
+            </div>
+            <a href="https://maps.app.goo.gl/UKf9DQ7HPz2QBYd78" class="location-button">
+                Navigate to Church Location
+            </a>
+        </div>
+
+        <div class="location-card">
+            <div class="location-details">
+                <h2>Reception Venue</h2>
+                <p>Diamond Banquet hall A/C, Allapra</p>
+            </div>
+            <a href="https://maps.app.goo.gl/LkFBGZz4uyKZjMkVA" class="location-button">
+                Navigate to Reception Location
+            </a>
+        </div>
+    </div>
+</body>
+</html>
