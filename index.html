@@ -2,437 +2,976 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Delivery Note — Prodify</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alkanz — Gate Pass Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0d1117;--sur:#161b22;--sur2:#1c2430;--sur3:#21303f;--bdr:#30363d;--bdr2:#3d4f63;--acc:#e6a817;--acc2:#c48f10;--blue:#388bfd;--grn:#3fb950;--red:#f85149;--ora:#f0883e;--txt:#e6edf3;--txt2:#8b949e;--txt3:#6e7681;--inp:#fffdf2;--inp-b:#d4a017;--r:8px}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);font-size:13px;line-height:1.5;min-height:100vh}
-.topbar{background:var(--sur);border-bottom:1px solid var(--bdr);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.4)}
-.tb-brand{display:flex;align-items:center;gap:12px}
-.tb-logo{width:36px;height:36px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#1a1208}
-.tb-title{font-size:15px;font-weight:700;letter-spacing:-.2px}
-.tb-sub{font-size:11px;color:var(--txt3);margin-top:1px}
-.tb-clock{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--acc);text-align:right;letter-spacing:.5px}
-.page{max-width:1400px;margin:0 auto;padding:22px 24px 48px}
-.layout{display:grid;grid-template-columns:420px 1fr;gap:18px;align-items:start}
-@media(max-width:1080px){.layout{grid-template-columns:1fr}}
-.panel{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.25)}
-.panel+.panel{margin-top:14px}
-.ph{background:var(--sur2);border-bottom:1px solid var(--bdr);padding:10px 18px;display:flex;align-items:center;justify-content:space-between}
-.ph-l{display:flex;align-items:center;gap:9px}
-.ph-ic{width:24px;height:24px;background:var(--sur3);border:1px solid var(--bdr2);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px}
-.ph h3{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--txt2)}
-.pb{padding:18px}
-.field{margin-bottom:12px}.field:last-child{margin-bottom:0}
-.field label{display:block;font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--txt3);margin-bottom:5px}
-.field input,.field select,.field textarea{width:100%;padding:8px 11px;border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;transition:border-color .15s,box-shadow .15s;appearance:none;-webkit-appearance:none}
-.field input:focus,.field select:focus,.field textarea:focus{outline:none;box-shadow:0 0 0 3px rgba(230,168,23,.2);border-color:var(--acc)!important}
-.inp-m{background:var(--inp);border:1.5px solid var(--inp-b);color:#1a1208}
-.inp-m::placeholder{color:#b89a4a}
-.inp-auto{background:#f0faf3;border:1.5px solid rgba(63,185,80,.4);color:#166534;font-family:'JetBrains Mono',monospace;font-weight:700;pointer-events:none}
-.inp-sel{background:var(--inp);border:1.5px solid var(--inp-b);color:#1a1208;font-weight:600;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' stroke='%231a1208' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
-textarea.inp-m{resize:vertical;min-height:50px}
-.r2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.sec{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);padding:5px 0 8px;border-bottom:1px solid var(--bdr);margin:16px 0 13px;display:flex;align-items:center;gap:7px}
-.sec::before{content:'';width:3px;height:11px;background:var(--acc);border-radius:2px;flex-shrink:0}
-.btn-row{display:flex;gap:9px;margin-top:14px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:.3px;cursor:pointer;transition:all .15s}
-.btn:active{transform:scale(.98)}
-.btn-add{background:rgba(56,139,253,.15);color:var(--blue);border:1px solid rgba(56,139,253,.3);flex:1;justify-content:center}
-.btn-add:hover{background:rgba(56,139,253,.25)}
-.btn-rm{background:rgba(248,81,73,.1);color:var(--red);border:1px solid rgba(248,81,73,.25);padding:8px 12px;font-size:11px}
-.btn-rm:hover{background:rgba(248,81,73,.2)}
-.btn-pdf{background:rgba(63,185,80,.12);color:var(--grn);border:1px solid rgba(63,185,80,.3);padding:9px 22px;font-size:13px}
-.btn-pdf:hover{background:rgba(63,185,80,.22)}
-.item-row{display:grid;grid-template-columns:40px 1fr 65px 75px 85px 85px 36px;gap:6px;align-items:end;margin-bottom:8px}
-.item-row input{padding:7px 8px;font-size:12px}
-.item-lbl{display:grid;grid-template-columns:40px 1fr 65px 75px 85px 85px 36px;gap:6px;margin-bottom:4px}
-.item-lbl span{font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--txt3)}
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.summary-grid .field{margin-bottom:0}
-.words-box{background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;padding:10px 12px;margin-top:12px}
-.words-lbl{font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--txt3);margin-bottom:4px}
-.words-val{font-size:12px;font-weight:600;color:var(--grn);font-style:italic;min-height:18px}
+  :root{
+    --navy:#122741;
+    --navy-2:#1b3654;
+    --steel:#5b7186;
+    --steel-light:#eef2f5;
+    --line:#d7dee4;
+    --accent:#c98a2c;
+    --accent-2:#2f7a52;
+    --paper:#ffffff;
+    --ink:#1c2733;
+    --ink-soft:#5c6b78;
+    --danger:#a8402f;
+    --radius:6px;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background: var(--steel-light);
+    color:var(--ink);
+    padding:24px;
+  }
+  .app{
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: 380px 1fr;
+    gap:24px;
+    align-items:start;
+  }
+  @media (max-width: 940px){
+    .app{grid-template-columns: 1fr;}
+  }
+
+  /* ---------- FORM PANEL ---------- */
+  .panel{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+  .panel h2{
+    margin:0 0 4px 0;
+    font-size:15px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--navy);
+    border-bottom:2px solid var(--navy);
+    padding-bottom:8px;
+  }
+  .panel .sub{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+  }
+  fieldset{
+    border:none;
+    padding:0;
+    margin:0 0 16px 0;
+  }
+  legend{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:8px;
+    padding:0;
+  }
+  label{
+    display:block;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin:10px 0 4px;
+  }
+  input[type=text], input[type=number], input[type=time], input[type=date], select{
+    width:100%;
+    padding:8px 9px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-size:13px;
+    font-family:inherit;
+    color:var(--ink);
+    background:#fff;
+  }
+  input:focus, select:focus{
+    outline:2px solid var(--navy-2);
+    outline-offset:1px;
+    border-color:var(--navy-2);
+  }
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .hint{
+    font-size:10.5px;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  .calc-box{
+    margin-top:10px;
+    background:var(--steel-light);
+    border:1px dashed var(--steel);
+    border-radius:4px;
+    padding:10px 12px;
+    font-size:12.5px;
+    line-height:1.6;
+  }
+  .calc-box b{color:var(--navy);}
+
+  /* items table editor */
+  .item-row{
+    display:grid;
+    grid-template-columns: .9fr 1.1fr 55px 95px 28px;
+    gap:6px;
+    margin-bottom:6px;
+    align-items:center;
+  }
+  .item-row input, .item-row select{padding:6px 7px; font-size:12px;}
+  .item-row button{
+    border:none;
+    background:var(--danger);
+    color:#fff;
+    border-radius:4px;
+    width:26px; height:26px;
+    cursor:pointer;
+    font-size:14px;
+    line-height:1;
+  }
+  .add-row-btn{
+    width:100%;
+    padding:7px;
+    border:1px dashed var(--steel);
+    background:#fff;
+    color:var(--navy);
+    border-radius:4px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:2px;
+  }
+  .add-row-btn:hover{background:var(--steel-light);}
+
+  .col-labels{
+    display:grid;
+    grid-template-columns: .9fr 1.1fr 55px 95px 28px;
+    gap:6px;
+    font-size:10px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    margin-bottom:4px;
+  }
+
+  .generate-btn{
+    width:100%;
+    padding:13px;
+    margin-top:6px;
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.03em;
+    cursor:pointer;
+  }
+  .generate-btn:hover{background:var(--navy-2);}
+  .verify-line{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    background:#fdf6ea;
+    border:1px solid #eddcb2;
+    border-radius:4px;
+    padding:10px;
+    font-size:12px;
+    margin-top:14px;
+    color:#6b4e15;
+  }
+  .verify-line input{width:16px; height:16px; margin-top:2px;}
+
+  .qty-check{
+    margin-top:8px;
+    padding:8px 10px;
+    border-radius:4px;
+    font-size:11.5px;
+    font-weight:700;
+  }
+  .qty-check.ok{background:#e7f4ec; color:#215c3b; border:1px solid #b9e0c6;}
+  .qty-check.bad{background:#fbeae7; color:#8a3020; border:1px solid #f0c3ba;}
+  .qty-check.neutral{background:var(--steel-light); color:var(--ink-soft); border:1px solid var(--line);}
+
+  /* ---------- PREVIEW / PRINT PANEL ---------- */
+  .preview-wrap{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+  .preview-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+  }
+  .preview-toolbar h2{
+    margin:0;
+    font-size:15px;
+    color:var(--navy);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  #pdfBtn{
+    background:var(--accent-2);
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:5px;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+  }
+  #pdfBtn:hover{background:#255f40;}
+  #pdfBtn:disabled{background:#9fb8ab; cursor:wait;}
+
+  /* ===== the actual gate pass sheet ===== */
+  #passSheet{
+    width:100%;
+    max-width:780px;
+    margin:0 auto;
+    background:#fff;
+    color:var(--ink);
+    border:1px solid var(--line);
+    padding:26px 30px 22px;
+    font-size:12.5px;
+  }
+  .gp-topband{
+    height:6px;
+    background: linear-gradient(90deg, var(--navy) 0%, var(--navy) 60%, var(--accent) 60%, var(--accent) 100%);
+    margin:-26px -30px 18px;
+  }
+  .gp-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    border-bottom:2px solid var(--navy);
+    padding-bottom:12px;
+    margin-bottom:14px;
+  }
+  .gp-brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .gp-logo{
+    width:60px;
+    height:64px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .gp-logo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
+  .gp-brand-text .co-name{
+    font-size:16px;
+    font-weight:800;
+    color:var(--navy);
+    line-height:1.15;
+  }
+  .gp-brand-text .co-sub{
+    font-size:10.5px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .gp-title{
+    text-align:right;
+  }
+  .gp-title .tag{
+    display:inline-block;
+    background:var(--navy);
+    color:#fff;
+    font-size:13.5px;
+    font-weight:800;
+    letter-spacing:.08em;
+    padding:5px 14px;
+    border-radius:3px;
+  }
+  .gp-title .meta{
+    margin-top:6px;
+    font-size:10.5px;
+    color:var(--ink-soft);
+  }
+  .gp-title .meta b{color:var(--ink);}
+
+  .gp-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 22px;
+    margin-bottom:14px;
+  }
+  .gp-section-title{
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--accent);
+    border-bottom:1px solid var(--line);
+    padding-bottom:3px;
+    margin-bottom:8px;
+  }
+  .kv{
+    display:flex;
+    justify-content:space-between;
+    padding:4px 0;
+    border-bottom:1px dotted var(--line);
+    font-size:12px;
+  }
+  .kv span:first-child{color:var(--ink-soft);}
+  .kv span:last-child{font-weight:700; text-align:right;}
+
+  .gp-eta{
+    background:var(--steel-light);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:10px 12px;
+    margin:4px 0 14px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:6px 18px;
+    font-size:11.5px;
+  }
+  .gp-eta div b{display:block; font-size:13px; color:var(--navy);}
+
+  table.items{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:10px;
+    font-size:11.5px;
+  }
+  table.items th{
+    background:var(--navy);
+    color:#fff;
+    text-align:left;
+    padding:6px 8px;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  table.items td{
+    padding:6px 8px;
+    border-bottom:1px solid var(--line);
+  }
+  table.items tr:nth-child(even) td{background:#f8fafb;}
+  .qc-pill{
+    display:inline-block;
+    padding:1px 8px;
+    border-radius:9px;
+    font-size:10px;
+    font-weight:700;
+  }
+  .qc-pill.pass{background:#e7f4ec; color:#215c3b;}
+  .qc-pill.damaged{background:#fdf1e0; color:#8a5a10;}
+  .qc-pill.reject{background:#fbeae7; color:#8a3020;}
+  .items-total{
+    display:flex;
+    justify-content:flex-end;
+    gap:20px;
+    font-size:12.5px;
+    margin-bottom:16px;
+    padding-top:6px;
+    border-top:1px solid var(--line);
+  }
+  .items-total b{color:var(--navy); font-size:14px;}
+
+  .gp-declaration{
+    font-size:11.5px;
+    font-style:italic;
+    color:var(--ink);
+    border-left:3px solid var(--accent);
+    padding:8px 12px;
+    background:#fdf9f2;
+    margin-bottom:14px;
+  }
+
+  .gp-verify{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .verify-box{
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:9px 12px;
+  }
+  .verify-box .vb-title{
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--accent);
+    margin-bottom:6px;
+  }
+  .verify-box .vb-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11.5px;
+    padding:2px 0;
+  }
+  .vb-box{
+    width:13px;height:13px;
+    border:1.5px solid var(--navy);
+    border-radius:3px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:900;
+    color:var(--navy);
+    flex-shrink:0;
+  }
+  .verify-box .vb-by{
+    margin-top:6px;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    border-top:1px dotted var(--line);
+    padding-top:5px;
+  }
+  .verify-box .vb-by b{color:var(--ink);}
+
+  .gp-signoff{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .sign-box{
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:7px 8px 8px;
+    min-height:84px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .sign-box .lbl{
+    font-size:8.8px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--ink-soft);
+    font-weight:700;
+    line-height:1.25;
+  }
+  .sign-box .name{font-size:10.5px; margin-top:14px; font-weight:600;}
+  .sign-line{
+    border-top:1px solid var(--ink);
+    margin-top:14px;
+    padding-top:3px;
+    font-size:8.8px;
+    color:var(--ink-soft);
+  }
+
+  .gp-footer{
+    background:var(--navy);
+    color:#fff;
+    border-radius:6px;
+    padding:12px 16px;
+    text-align:center;
+  }
+  .gp-footer .quote-title{
+    font-size:12.5px;
+    font-weight:800;
+    letter-spacing:.03em;
+    margin-bottom:3px;
+  }
+  .gp-footer .quote-body{
+    font-size:10.5px;
+    line-height:1.5;
+    color:#dfe8ef;
+  }
+  .gp-links{
+    text-align:center;
+    font-size:9.5px;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+  .gp-links a{color:var(--navy-2); text-decoration:none; font-weight:600;}
+
+  @media print{
+    body{background:#fff; padding:0;}
+    .app{display:block;}
+    .panel, .preview-toolbar{display:none;}
+    .preview-wrap{border:none; padding:0;}
+    #passSheet{border:none; max-width:100%;}
+  }
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="tb-brand">
-    <div class="tb-logo">P</div>
-    <div>
-      <div class="tb-title">Delivery Note Generator</div>
-      <div class="tb-sub">Prodify · Production Simplified · Invoice & DN Management</div>
-    </div>
-  </div>
-  <div class="tb-clock" id="clock">--:--:--</div>
-</header>
+<div class="app">
 
-<main class="page">
-<div class="layout">
-
-<!-- LEFT COLUMN -->
-<div>
-  <!-- Our Company -->
+  <!-- ============ FORM PANEL ============ -->
   <div class="panel">
-    <div class="ph"><div class="ph-l"><div class="ph-ic">🏢</div><h3>Our Company</h3></div></div>
-    <div class="pb">
-      <div class="field"><label>Company Name</label><input type="text" id="coName" class="inp-m" value="Prodify Manufacturing LLC"></div>
-      <div class="field"><label>Address</label><input type="text" id="coAddr" class="inp-m" placeholder="Street, City, Country"></div>
-      <div class="r2">
-        <div class="field"><label>Phone</label><input type="text" id="coPhone" class="inp-m" placeholder="+971..."></div>
-        <div class="field"><label>TRN / Tax ID</label><input type="text" id="coTRN" class="inp-m" placeholder="Tax Registration Number"></div>
-      </div>
-    </div>
-  </div>
+    <h2>Gate Pass — Entry Form</h2>
+    <div class="sub">Fill in the delivery details, then generate the pass on the right.</div>
 
-  <!-- Customer -->
-  <div class="panel">
-    <div class="ph"><div class="ph-l"><div class="ph-ic">👤</div><h3>Bill To / Ship To</h3></div></div>
-    <div class="pb">
-      <div class="field"><label>Customer Name</label><input type="text" id="custName" class="inp-m" placeholder="Customer / Company Name"></div>
-      <div class="field"><label>Address</label><input type="text" id="custAddr" class="inp-m" placeholder="Customer Address"></div>
-      <div class="r2">
-        <div class="field"><label>Phone</label><input type="text" id="custPhone" class="inp-m" placeholder="Phone"></div>
-        <div class="field"><label>TRN / Tax ID</label><input type="text" id="custTRN" class="inp-m" placeholder="Customer TRN"></div>
-      </div>
-      <div class="field"><label>Project / Reference</label><input type="text" id="custProj" class="inp-m" placeholder="Project Name"></div>
-    </div>
-  </div>
-
-  <!-- DN Details -->
-  <div class="panel">
-    <div class="ph"><div class="ph-l"><div class="ph-ic">📄</div><h3>Delivery Note Details</h3></div></div>
-    <div class="pb">
-      <div class="r3">
-        <div class="field"><label>DN Number</label><input type="text" id="dnNo" class="inp-m" placeholder="DN-0001"></div>
-        <div class="field"><label>Date</label><input type="date" id="dnDate" class="inp-m"></div>
-        <div class="field"><label>Reference</label><input type="text" id="dnRef" class="inp-m" placeholder="PO / Ref"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Currency & Tax -->
-  <div class="panel">
-    <div class="ph"><div class="ph-l"><div class="ph-ic">💱</div><h3>Currency & Tax</h3></div></div>
-    <div class="pb">
-      <div class="r2">
-        <div class="field">
-          <label>Currency</label>
-          <select id="currency" class="inp-sel" onchange="onCurrencyChange()">
-            <option value="AED">AED - UAE Dirham</option>
-            <option value="USD">USD - US Dollar</option>
-            <option value="GBP">GBP - British Pound</option>
-            <option value="CNY">CNY - Chinese Yuan</option>
-            <option value="SGD">SGD - Singapore Dollar</option>
-            <option value="INR">INR - Indian Rupee</option>
-            <option value="EUR">EUR - Euro</option>
-            <option value="SAR">SAR - Saudi Riyal</option>
-            <option value="QAR">QAR - Qatar Riyal</option>
-          </select>
+    <fieldset>
+      <legend>Pass details</legend>
+      <div class="row2">
+        <div>
+          <label>Gate pass no.</label>
+          <input type="text" id="passNo" placeholder="auto">
         </div>
-        <div class="field"><label>Tax Rate (%)</label><input type="number" id="taxRate" class="inp-m" step="0.01" value="5" oninput="calculateDN()"></div>
+        <div>
+          <label>Date</label>
+          <input type="date" id="passDate">
+        </div>
       </div>
-    </div>
-  </div>
+    </fieldset>
 
-  <!-- Items -->
-  <div class="panel">
-    <div class="ph"><div class="ph-l"><div class="ph-ic">📦</div><h3>Items</h3></div></div>
-    <div class="pb">
-      <div class="item-lbl"><span>#</span><span>Description</span><span>Unit</span><span>Qty</span><span>Rate</span><span>Amount</span><span></span></div>
+    <fieldset>
+      <legend>Project</legend>
+      <label>Project name</label>
+      <input type="text" id="projectName" placeholder="e.g. Gesco — Tower B, Al Reem">
+
+      <label>Client / site</label>
+      <input type="text" id="clientSite" placeholder="e.g. Al Reem Site Office">
+    </fieldset>
+
+    <fieldset>
+      <legend>Destination & route</legend>
+      <label>Emirate</label>
+      <select id="emirate">
+        <option value="">— Select emirate —</option>
+        <option>Abu Dhabi</option>
+        <option>Dubai</option>
+        <option>Sharjah</option>
+        <option>Ajman</option>
+        <option>Umm Al Quwain</option>
+        <option>Ras Al Khaimah</option>
+        <option>Fujairah</option>
+        <option>Other / Outside UAE</option>
+      </select>
+
+      <div class="row2">
+        <div>
+          <label>Distance (km)</label>
+          <input type="number" id="distance" min="0" step="0.1" placeholder="e.g. 85">
+        </div>
+        <div>
+          <label>Avg. speed (km/h)</label>
+          <input type="number" id="avgSpeed" min="1" step="1" value="60">
+        </div>
+      </div>
+      <div class="hint">Default 60 km/h assumes a loaded truck on mixed highway/city roads — adjust if needed.</div>
+
+      <div class="row2">
+        <div>
+          <label>Dispatch time</label>
+          <input type="time" id="dispatchTime">
+        </div>
+        <div>
+          <label>Loading/stop buffer (min)</label>
+          <input type="number" id="buffer" min="0" step="5" value="15">
+        </div>
+      </div>
+
+      <div class="calc-box" id="etaCalc">
+        Enter distance and dispatch time to calculate the estimated arrival.
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Vehicle</legend>
+      <div class="row2">
+        <div>
+          <label>Vehicle name/type</label>
+          <input type="text" id="vehicleName" placeholder="e.g. Flatbed Truck">
+        </div>
+        <div>
+          <label>Vehicle number</label>
+          <input type="text" id="vehicleNo" placeholder="e.g. DXB-A-12345">
+        </div>
+      </div>
+      <label>Driver name (optional)</label>
+      <input type="text" id="driverName" placeholder="e.g. Mohammed R.">
+    </fieldset>
+
+    <fieldset>
+      <legend>Taglist / items</legend>
+      <div class="col-labels"><span>Tag no.</span><span>Description</span><span>Qty</span><span>Quality</span><span></span></div>
       <div id="itemRows"></div>
-      <div class="btn-row">
-        <button class="btn btn-add" onclick="addItemRow()">+ Add Item</button>
+      <button type="button" class="add-row-btn" id="addRowBtn">+ Add item row</button>
+
+      <label>Total PCS on load (manual entry)</label>
+      <input type="number" id="totalPcs" min="0" placeholder="Total pieces physically loaded">
+      <div class="hint" id="qtyMatchHint">This will be checked against the sum of item quantities above.</div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Quality & quantity verification</legend>
+      <div class="row2">
+        <div>
+          <label>Quantity checked by</label>
+          <input type="text" id="qtyCheckedBy" placeholder="Name">
+        </div>
+        <div>
+          <label>Quality checked by</label>
+          <input type="text" id="qualityCheckedBy" placeholder="Name">
+        </div>
+      </div>
+      <div class="verify-line">
+        <input type="checkbox" id="qtyVerifiedCheck" checked>
+        <span>Quantity tallied against the taglist and matches the load.</span>
+      </div>
+      <div class="verify-line">
+        <input type="checkbox" id="qualityVerifiedCheck" checked>
+        <span>Items inspected — free of visible damage, correct spec, ready for dispatch.</span>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Supervisor</legend>
+      <label>Supervisor name</label>
+      <input type="text" id="supervisorName" placeholder="e.g. Aravind">
+    </fieldset>
+
+    <div class="verify-line">
+      <input type="checkbox" id="verifyCheck" checked>
+      <span>All the above-mentioned information is accurate and verified — this line will print on the pass.</span>
+    </div>
+
+    <button class="generate-btn" id="generateBtn">Generate / Update Gate Pass ↻</button>
+  </div>
+
+  <!-- ============ PREVIEW PANEL ============ -->
+  <div class="preview-wrap">
+    <div class="preview-toolbar">
+      <h2>Preview</h2>
+      <button id="pdfBtn">⬇ Download as PDF</button>
+    </div>
+
+    <div id="passSheet">
+      <div class="gp-topband"></div>
+
+      <div class="gp-header">
+        <div class="gp-brand">
+          <div class="gp-logo"><img src="data:image/png;base64,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" alt="Al Kanz logo"></div>
+          <div class="gp-brand-text">
+            <div class="co-name">AL KANZ AIR CONDITIONING MATERIAL<br>MANUFACTURING LLC</div>
+            <div class="co-sub">Warehouse 6, Plot 1464, Umm Al Thuoob, New Industrial Area, Umm Al Quwain, UAE</div>
+            <div class="co-sub">+971 52 411 4858 &nbsp;·&nbsp; +971 52 411 4860 &nbsp;·&nbsp; alkanzuae.com</div>
+          </div>
+        </div>
+        <div class="gp-title">
+          <span class="tag">GATE PASS</span>
+          <div class="meta">No. <b id="outPassNo">—</b></div>
+          <div class="meta">Date: <b id="outDate">—</b></div>
+        </div>
+      </div>
+
+      <div class="gp-grid">
+        <div>
+          <div class="gp-section-title">Project details</div>
+          <div class="kv"><span>Project name</span><span id="outProject">—</span></div>
+          <div class="kv"><span>Client / site</span><span id="outSite">—</span></div>
+          <div class="kv"><span>Destination emirate</span><span id="outEmirate">—</span></div>
+        </div>
+        <div>
+          <div class="gp-section-title">Vehicle & dispatch</div>
+          <div class="kv"><span>Vehicle name/type</span><span id="outVehName">—</span></div>
+          <div class="kv"><span>Vehicle number</span><span id="outVehNo">—</span></div>
+          <div class="kv"><span>Driver</span><span id="outDriver">—</span></div>
+        </div>
+      </div>
+
+      <div class="gp-eta">
+        <div>Distance<b id="outDistance">—</b></div>
+        <div>Dispatch time<b id="outDispatch">—</b></div>
+        <div>Avg. speed<b id="outSpeed">—</b></div>
+        <div>Est. travel time<b id="outTravelTime">—</b></div>
+        <div>Est. arrival<b id="outArrival">—</b></div>
+      </div>
+
+      <div class="gp-section-title">Taglist / items loaded</div>
+      <table class="items">
+        <thead><tr><th>Tag no.</th><th>Description</th><th>Qty</th><th>Quality</th></tr></thead>
+        <tbody id="outItems"></tbody>
+      </table>
+      <div class="items-total">
+        <span>Sum of item qty: <b id="outSumQty">—</b></span>
+        <span>Total PCS on load: <b id="outTotalPcs">—</b></span>
+      </div>
+      <div class="qty-check neutral" id="outQtyCheck">Enter quantities to check the tally.</div>
+
+      <div class="gp-declaration" id="outDeclaration">
+        All the above-mentioned information is accurate and verified.
+      </div>
+
+      <div class="gp-verify">
+        <div class="verify-box">
+          <div class="vb-title">Quantity verification</div>
+          <div class="vb-row"><span class="vb-box" id="outQtyBox">✓</span> Quantity tallied against taglist &amp; matches load</div>
+          <div class="vb-by">Checked by: <b id="outQtyBy">—</b></div>
+        </div>
+        <div class="verify-box">
+          <div class="vb-title">Quality verification</div>
+          <div class="vb-row"><span class="vb-box" id="outQualBox">✓</span> Inspected — free of damage, correct spec</div>
+          <div class="vb-by">Checked by: <b id="outQualBy">—</b></div>
+        </div>
+      </div>
+
+      <div class="gp-signoff">
+        <div class="sign-box">
+          <div class="lbl">Prepared by</div>
+          <div class="sign-line">Store / Dispatch</div>
+        </div>
+        <div class="sign-box">
+          <div class="lbl">Quality & Qty checked by</div>
+          <div class="sign-line">Signature</div>
+        </div>
+        <div class="sign-box">
+          <div class="lbl">Supervisor signature & seal</div>
+          <div class="name" id="outSupervisor">&nbsp;</div>
+          <div class="sign-line">Signature &amp; Company Seal</div>
+        </div>
+        <div class="sign-box">
+          <div class="lbl">Security / Gate</div>
+          <div class="sign-line">Verified &amp; Gate Cleared</div>
+        </div>
+      </div>
+
+      <div class="gp-footer">
+        <div class="quote-title">Manufacturing for a Greener Tomorrow</div>
+        <div class="quote-body">Our PI duct solutions reduce energy loss by up to 30%, helping buildings across the UAE breathe cleaner and operate smarter.</div>
+      </div>
+      <div class="gp-links">
+        alkanzuae.com &nbsp;·&nbsp; Raw Material Calculator — Prodify:
+        <a href="https://prodify193.github.io/hvac-calculator/">prodify193.github.io/hvac-calculator</a>
       </div>
     </div>
   </div>
-</div>
-
-<!-- RIGHT COLUMN -->
-<div>
-  <!-- Summary -->
-  <div class="panel">
-    <div class="ph"><div class="ph-l"><div class="ph-ic">📊</div><h3>Summary</h3></div></div>
-    <div class="pb">
-      <div class="summary-grid">
-        <div class="field"><label>Subtotal</label><input type="text" id="sumSub" class="inp-auto" readonly value="0.00"></div>
-        <div class="field"><label>Tax Amount</label><input type="text" id="sumTax" class="inp-auto" readonly value="0.00"></div>
-      </div>
-      <div class="field" style="margin-top:12px"><label>Grand Total</label><input type="text" id="sumTotal" class="inp-auto" readonly style="font-size:18px;background:#e8f5e9;border-color:rgba(63,185,80,.5)" value="0.00"></div>
-      <div class="words-box">
-        <div class="words-lbl">Amount in Words</div>
-        <div class="words-val" id="sumWords">Zero</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PDF -->
-  <div class="btn-row" style="margin-top:18px">
-    <button class="btn btn-pdf" style="flex:1;justify-content:center;padding:14px;font-size:14px" onclick="exportPDF()">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z"/></svg>
-      Generate Delivery Note PDF
-    </button>
-  </div>
-</div>
 
 </div>
-</main>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  function tick(){ document.getElementById('clock').textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
-  setInterval(tick,1000); tick();
-  document.getElementById('dnDate').value = new Date().toISOString().slice(0,10);
-  addItemRow('Kingspan PH Series - Alu SA Mirr', 'Sqm', 45.5, 85);
-  addItemRow('Duct Glue 5L', 'Ltr', 10, 45);
-  addItemRow('Alu Tape 30Yd', 'Roll', 8, 32);
-  onCurrencyChange();
+// ---------- helpers ----------
+function pad(n){return n.toString().padStart(2,'0');}
+
+function todayISO(){
+  const d = new Date();
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function autoPassNo(){
+  const d = new Date();
+  return 'AK-GP-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes());
+}
+function fmtDateDisplay(iso){
+  if(!iso) return '—';
+  const [y,m,d] = iso.split('-');
+  return d+'/'+m+'/'+y;
+}
+function fmtTimeDisplay(t){
+  if(!t) return '—';
+  let [h,m] = t.split(':').map(Number);
+  const ap = h>=12 ? 'PM':'AM';
+  let h12 = h%12; if(h12===0) h12=12;
+  return pad(h12)+':'+pad(m)+' '+ap;
+}
+function minutesToHM(mins){
+  const h = Math.floor(mins/60);
+  const m = Math.round(mins%60);
+  if(h<=0) return m+' min';
+  return h+' hr '+pad(m)+' min';
+}
+
+// ---------- item rows ----------
+const itemRowsEl = document.getElementById('itemRows');
+let rowCount = 0;
+
+function addItemRow(tag='', desc='', qty='', quality='pass'){
+  rowCount++;
+  const row = document.createElement('div');
+  row.className = 'item-row';
+  row.innerHTML = `
+    <input type="text" class="tagInput" value="${tag}" placeholder="TAG-${rowCount}">
+    <input type="text" class="descInput" value="${desc}" placeholder="e.g. Rectangular duct 600x400">
+    <input type="number" class="qtyInput" value="${qty}" min="0" placeholder="0">
+    <select class="qualInput">
+      <option value="pass" ${quality==='pass'?'selected':''}>Pass</option>
+      <option value="damaged" ${quality==='damaged'?'selected':''}>Damaged</option>
+      <option value="reject" ${quality==='reject'?'selected':''}>Reject</option>
+    </select>
+    <button type="button" title="Remove row">×</button>
+  `;
+  row.querySelector('button').addEventListener('click', ()=>{
+    row.remove();
+  });
+  itemRowsEl.appendChild(row);
+}
+document.getElementById('addRowBtn').addEventListener('click', ()=>addItemRow());
+// seed with 3 blank rows
+addItemRow(); addItemRow(); addItemRow();
+
+// ---------- ETA calc (live) ----------
+function computeETA(){
+  const dist = parseFloat(document.getElementById('distance').value);
+  const speed = parseFloat(document.getElementById('avgSpeed').value) || 60;
+  const buffer = parseFloat(document.getElementById('buffer').value) || 0;
+  const dispatch = document.getElementById('dispatchTime').value;
+
+  if(!dist || dist<=0){
+    document.getElementById('etaCalc').innerHTML = 'Enter distance and dispatch time to calculate the estimated arrival.';
+    return {travelMins:null, arrival:null};
+  }
+  const travelMins = (dist/speed)*60 + buffer;
+
+  let arrivalStr = '—';
+  if(dispatch){
+    const [h,m] = dispatch.split(':').map(Number);
+    const d = new Date();
+    d.setHours(h,m,0,0);
+    d.setMinutes(d.getMinutes()+travelMins);
+    arrivalStr = fmtTimeDisplay(pad(d.getHours())+':'+pad(d.getMinutes()));
+  }
+
+  document.getElementById('etaCalc').innerHTML =
+    `Estimated travel time: <b>${minutesToHM(travelMins)}</b><br>` +
+    (dispatch ? `Estimated arrival: <b>${arrivalStr}</b>` : `Set dispatch time to see estimated arrival.`);
+
+  return {travelMins, arrival: arrivalStr};
+}
+['distance','avgSpeed','buffer','dispatchTime'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', computeETA);
 });
 
-function g(id){ return document.getElementById(id); }
+// ---------- generate pass ----------
+function generatePass(){
+  const passNo = document.getElementById('passNo').value.trim() || autoPassNo();
+  const dateVal = document.getElementById('passDate').value || todayISO();
 
-const CURR = {
-  AED:{symbol:'AED',name:'UAE Dirham',sub:'Fils',rate:5},
-  USD:{symbol:'USD',name:'US Dollar',sub:'Cents',rate:0},
-  GBP:{symbol:'GBP',name:'British Pound',sub:'Pence',rate:20},
-  CNY:{symbol:'CNY',name:'Chinese Yuan',sub:'Fen',rate:13},
-  SGD:{symbol:'SGD',name:'Singapore Dollar',sub:'Cents',rate:9},
-  INR:{symbol:'INR',name:'Indian Rupee',sub:'Paise',rate:18},
-  EUR:{symbol:'EUR',name:'Euro',sub:'Cents',rate:21},
-  SAR:{symbol:'SAR',name:'Saudi Riyal',sub:'Halalas',rate:15},
-  QAR:{symbol:'QAR',name:'Qatar Riyal',sub:'Dirhams',rate:5}
-};
+  document.getElementById('outPassNo').textContent = passNo;
+  document.getElementById('outDate').textContent = fmtDateDisplay(dateVal);
 
-function onCurrencyChange(){
-  const c = g('currency').value;
-  if(CURR[c]) g('taxRate').value = CURR[c].rate;
-  calculateDN();
-}
+  document.getElementById('outProject').textContent = document.getElementById('projectName').value || '—';
+  document.getElementById('outSite').textContent = document.getElementById('clientSite').value || '—';
+  document.getElementById('outEmirate').textContent = document.getElementById('emirate').value || '—';
 
-let rowCounter = 0;
-function addItemRow(desc='', unit='Pcs', qty=0, rate=0){
-  rowCounter++;
-  const id = rowCounter;
-  const div = document.createElement('div');
-  div.className = 'item-row';
-  div.id = 'row-'+id;
-  div.innerHTML = `
-    <input type="text" class="inp-m" value="${id}" readonly style="background:#e9ecef;border-color:#ced4da;text-align:center;font-weight:700;font-size:11px">
-    <input type="text" class="inp-m item-desc" placeholder="Item description" value="${desc}">
-    <input type="text" class="inp-m item-unit" placeholder="Pcs" value="${unit}">
-    <input type="number" class="inp-m item-qty" placeholder="0" step="0.01" value="${qty||''}" oninput="calculateDN()">
-    <input type="number" class="inp-m item-rate" placeholder="0.00" step="0.01" value="${rate||''}" oninput="calculateDN()">
-    <input type="text" class="inp-auto item-total" readonly value="0.00">
-    <button class="btn btn-rm" onclick="removeRow(${id})">✕</button>
-  `;
-  g('itemRows').appendChild(div);
-  calculateDN();
-}
+  document.getElementById('outVehName').textContent = document.getElementById('vehicleName').value || '—';
+  document.getElementById('outVehNo').textContent = document.getElementById('vehicleNo').value || '—';
+  document.getElementById('outDriver').textContent = document.getElementById('driverName').value || '—';
 
-function removeRow(id){ const row = g('row-'+id); if(row){ row.remove(); calculateDN(); } }
+  const dist = document.getElementById('distance').value;
+  const speed = document.getElementById('avgSpeed').value || 60;
+  const dispatch = document.getElementById('dispatchTime').value;
+  const {travelMins, arrival} = computeETA();
 
-function calculateDN(){
-  let subtotal = 0;
-  document.querySelectorAll('.item-row').forEach(r => {
-    const qty = parseFloat(r.querySelector('.item-qty').value) || 0;
-    const rate = parseFloat(r.querySelector('.item-rate').value) || 0;
-    const total = qty * rate;
-    r.querySelector('.item-total').value = total.toFixed(2);
-    subtotal += total;
+  document.getElementById('outDistance').textContent = dist ? dist+' km' : '—';
+  document.getElementById('outDispatch').textContent = dispatch ? fmtTimeDisplay(dispatch) : '—';
+  document.getElementById('outSpeed').textContent = speed+' km/h';
+  document.getElementById('outTravelTime').textContent = travelMins ? minutesToHM(travelMins) : '—';
+  document.getElementById('outArrival').textContent = (dispatch && travelMins) ? arrival : '—';
+
+  // items
+  const tbody = document.getElementById('outItems');
+  tbody.innerHTML = '';
+  const qcLabels = {pass:['Pass','pass'], damaged:['Damaged','damaged'], reject:['Reject','reject']};
+  let sumQty = 0;
+  let anyItems = false;
+  document.querySelectorAll('.item-row').forEach(row=>{
+    const tag = row.querySelector('.tagInput').value.trim();
+    const desc = row.querySelector('.descInput').value.trim();
+    const qty = row.querySelector('.qtyInput').value.trim();
+    const qual = row.querySelector('.qualInput').value;
+    if(tag || desc || qty){
+      anyItems = true;
+      if(qty) sumQty += parseFloat(qty) || 0;
+      const [qlabel, qclass] = qcLabels[qual];
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${tag||'—'}</td><td>${desc||'—'}</td><td>${qty||'—'}</td><td><span class="qc-pill ${qclass}">${qlabel}</span></td>`;
+      tbody.appendChild(tr);
+    }
   });
-  const taxRate = parseFloat(g('taxRate').value) || 0;
-  const taxAmt = subtotal * (taxRate / 100);
-  const grandTotal = subtotal + taxAmt;
-  const currCode = g('currency').value;
-  const sym = CURR[currCode] ? CURR[currCode].symbol : currCode;
-  g('sumSub').value = sym + ' ' + subtotal.toFixed(2);
-  g('sumTax').value = sym + ' ' + taxAmt.toFixed(2);
-  g('sumTotal').value = sym + ' ' + grandTotal.toFixed(2);
-  g('sumWords').textContent = amountToWords(grandTotal, currCode);
+  if(!anyItems){
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#5c6b78;">No items entered</td></tr>';
+  }
+
+  const totalPcsVal = document.getElementById('totalPcs').value;
+  document.getElementById('outSumQty').textContent = anyItems ? sumQty : '—';
+  document.getElementById('outTotalPcs').textContent = totalPcsVal || '—';
+  document.getElementById('outSupervisor').textContent = document.getElementById('supervisorName').value || '';
+
+  // quantity tally check
+  const qtyCheckEl = document.getElementById('outQtyCheck');
+  if(totalPcsVal && anyItems){
+    const totalNum = parseFloat(totalPcsVal);
+    if(totalNum === sumQty){
+      qtyCheckEl.className = 'qty-check ok';
+      qtyCheckEl.textContent = '✓ Quantity matches — sum of item qty equals total PCS on load ('+sumQty+').';
+    } else {
+      qtyCheckEl.className = 'qty-check bad';
+      qtyCheckEl.textContent = '⚠ Mismatch — item quantities sum to '+sumQty+', but total PCS on load is '+totalNum+'. Recheck before dispatch.';
+    }
+  } else {
+    qtyCheckEl.className = 'qty-check neutral';
+    qtyCheckEl.textContent = 'Enter item quantities and total PCS on load to check the tally.';
+  }
+
+  // quality & quantity verification boxes
+  const qtyBy = document.getElementById('qtyCheckedBy').value.trim();
+  const qualBy = document.getElementById('qualityCheckedBy').value.trim();
+  document.getElementById('outQtyBy').textContent = qtyBy || '—';
+  document.getElementById('outQualBy').textContent = qualBy || '—';
+  document.getElementById('outQtyBox').textContent = document.getElementById('qtyVerifiedCheck').checked ? '✓' : '';
+  document.getElementById('outQualBox').textContent = document.getElementById('qualityVerifiedCheck').checked ? '✓' : '';
+
+  const declEl = document.getElementById('outDeclaration');
+  if(document.getElementById('verifyCheck').checked){
+    declEl.style.display = 'block';
+    declEl.textContent = 'All the above-mentioned information — including item quantity and quality — is accurate and verified.';
+  } else {
+    declEl.style.display = 'none';
+  }
 }
 
-function amountToWords(num, code) {
-  if (num === 0) return 'Zero';
-  const c = CURR[code] || {name:'Currency', sub:'Cents'};
-  const intPart = Math.floor(num);
-  const decPart = Math.round((num - intPart) * 100);
-  let words = numberToEnglish(intPart) + ' ' + c.name;
-  if (decPart > 0) words += ' and ' + numberToEnglish(decPart) + ' ' + c.sub;
-  return words + ' Only';
-}
+document.getElementById('generateBtn').addEventListener('click', generatePass);
+['totalPcs','qtyCheckedBy','qualityCheckedBy','qtyVerifiedCheck','qualityVerifiedCheck'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', generatePass);
+  document.getElementById(id).addEventListener('change', generatePass);
+});
+document.getElementById('passDate').value = todayISO();
+document.getElementById('passNo').placeholder = autoPassNo();
+generatePass();
 
-function numberToEnglish(n) {
-  const a = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
-  const b = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
-  if (n < 20) return a[n];
-  if (n < 100) return b[Math.floor(n/10)] + (n%10 ? ' ' + a[n%10] : '');
-  if (n < 1000) return a[Math.floor(n/100)] + ' Hundred' + (n%100 ? ' and ' + numberToEnglish(n%100) : '');
-  if (n < 100000) return numberToEnglish(Math.floor(n/1000)) + ' Thousand' + (n%1000 ? ' ' + numberToEnglish(n%1000) : '');
-  if (n < 1000000) return numberToEnglish(Math.floor(n/100000)) + ' Lakh' + (n%100000 ? ' ' + numberToEnglish(n%100000) : '');
-  if (n < 10000000) return numberToEnglish(Math.floor(n/100000)) + ' Lakh' + (n%100000 ? ' ' + numberToEnglish(n%100000) : '');
-  if (n < 1000000000) return numberToEnglish(Math.floor(n/1000000)) + ' Million' + (n%1000000 ? ' ' + numberToEnglish(n%1000000) : '');
-  return numberToEnglish(Math.floor(n/1000000000)) + ' Billion' + (n%1000000000 ? ' ' + numberToEnglish(n%1000000000) : '');
-}
+// ---------- PDF export ----------
+document.getElementById('pdfBtn').addEventListener('click', ()=>{
+  generatePass();
+  const btn = document.getElementById('pdfBtn');
+  btn.disabled = true;
+  btn.textContent = 'Preparing PDF…';
 
-function exportPDF(){
-  const currCode = g('currency').value;
-  const c = CURR[currCode] || {symbol:currCode, name:currCode, sub:'Cents'};
-  const taxRate = parseFloat(g('taxRate').value) || 0;
-  const genDate = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
-  const dnDateFmt = g('dnDate').value ? new Date(g('dnDate').value).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+  const el = document.getElementById('passSheet');
+  const passNo = document.getElementById('outPassNo').textContent.replace(/[^a-zA-Z0-9-]/g,'_');
 
-  let itemRows = '';
-  let subtotal = 0;
-  let idx = 0;
-  document.querySelectorAll('.item-row').forEach(r => {
-    idx++;
-    const desc = r.querySelector('.item-desc').value || '—';
-    const unit = r.querySelector('.item-unit').value || '—';
-    const qty = parseFloat(r.querySelector('.item-qty').value) || 0;
-    const rate = parseFloat(r.querySelector('.item-rate').value) || 0;
-    const total = qty * rate;
-    subtotal += total;
-    itemRows += '<tr><td style="text-align:center;width:30px">'+idx+'</td><td style="text-align:left">'+desc+'</td><td style="text-align:center">'+unit+'</td><td style="text-align:right">'+qty.toFixed(2)+'</td><td style="text-align:right">'+rate.toFixed(2)+'</td><td style="text-align:right;font-weight:700">'+total.toFixed(2)+'</td></tr>';
+  const opt = {
+    margin: [8,8,8,8],
+    filename: 'GatePass_'+passNo+'.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(el).save().then(()=>{
+    btn.disabled = false;
+    btn.textContent = '⬇ Download as PDF';
+  }).catch(()=>{
+    btn.disabled = false;
+    btn.textContent = '⬇ Download as PDF';
   });
-
-  const taxAmt = subtotal * (taxRate / 100);
-  const grandTotal = subtotal + taxAmt;
-  const words = amountToWords(grandTotal, currCode);
-
-  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Delivery Note - ${g('dnNo').value}</title>
-<style>
-@page{size:A4;margin:12mm 14mm 16mm 14mm}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
-html,body{background:#fff!important;color:#000!important;font-family:Arial,Helvetica,sans-serif;font-size:9.5pt;line-height:1.5}
-.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:72pt;font-weight:900;font-family:Arial,Helvetica,sans-serif;color:rgba(0,0,0,.035);letter-spacing:8px;text-transform:uppercase;white-space:nowrap;pointer-events:none;z-index:0;user-select:none}
-.content{position:relative;z-index:1}
-.doc-header{border-bottom:3px solid #000;padding-bottom:10px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-start}
-.brand-logo{width:40px;height:40px;background:#000;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18pt;font-weight:900;flex-shrink:0;margin-right:12px}
-.co-name{font-size:14pt;font-weight:700;color:#000;letter-spacing:.5px}
-.co-details{font-size:8pt;color:#444;margin-top:4px;line-height:1.5}
-.doc-title-box{text-align:right}
-.doc-title{font-size:16pt;font-weight:900;color:#000;letter-spacing:2px;text-transform:uppercase;border:2px solid #000;padding:4px 16px;display:inline-block}
-.doc-meta{font-size:8.5pt;color:#555;margin-top:6px;text-align:right}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px}
-.info-box{border:1px solid #000;border-radius:3px;overflow:hidden}
-.info-head{background:#000!important;color:#fff!important;padding:4px 10px;font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-.info-body{padding:8px 10px;font-size:9pt}
-.info-row{margin-bottom:2px}
-.info-lbl{font-weight:600;color:#555;font-size:8pt;text-transform:uppercase}
-.mat-table{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:0}
-.mat-table thead th{background:#000!important;color:#fff!important;padding:6px 8px;font-weight:700;font-size:8pt;text-align:center;border-right:1px solid #333}
-.mat-table thead th:last-child{border-right:none}
-.mat-table thead th.left{text-align:left}
-.mat-table tbody td{padding:6px 8px;border-bottom:1px solid #ddd;vertical-align:middle}
-.mat-table tbody tr:nth-child(even){background:#fafafa!important}
-.summary-section{display:flex;justify-content:flex-end;margin-top:14px}
-.sum-table{width:280px;border-collapse:collapse}
-.sum-table td{padding:5px 10px;font-size:9pt}
-.sum-table .lbl{font-weight:600;text-align:right;color:#555}
-.sum-table .val{text-align:right;font-weight:700}
-.sum-table .total-row td{border-top:2px solid #000;font-size:11pt;padding-top:8px}
-.words-section{margin-top:14px;border:1px solid #000;border-radius:3px;padding:8px 12px;background:#f9f9f9!important}
-.words-lbl{font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#555;margin-bottom:3px}
-.words-val{font-size:10pt;font-weight:700;font-style:italic;color:#000}
-.terms-section{margin-top:18px;font-size:8pt;color:#555;border-top:1px solid #ccc;padding-top:8px}
-.sig-section{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:30px}
-.sig-box{text-align:center}
-.sig-label{font-size:8pt;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.5px}
-.sig-line{margin-top:40px;border-bottom:1px solid #000}
-.doc-footer{position:fixed;bottom:0;left:0;right:0;padding:6px 14mm;border-top:1px solid #ccc;display:flex;justify-content:space-between;font-size:7pt;color:#666;background:#fff!important}
-.footer-brand{font-weight:700;color:#000}
-@media print{html,body{background:#fff!important;color:#000!important}.watermark{color:rgba(0,0,0,.035)!important}.mat-table thead th{background:#000!important;color:#fff!important}.mat-table tbody tr:nth-child(even){background:#fafafa!important}.words-section{background:#f9f9f9!important}.doc-footer{background:#fff!important}}
-</style></head><body>
-<div class="watermark">PRODIFY</div>
-<div class="content">
-<div class="doc-header">
-<div style="display:flex;align-items:flex-start">
-<div class="brand-logo">P</div>
-<div>
-<div class="co-name">${g('coName').value || 'Company Name'}</div>
-<div class="co-details">${g('coAddr').value || 'Address Line'}<br>Phone: ${g('coPhone').value || '—'}<br>TRN: ${g('coTRN').value || '—'}</div>
-</div>
-</div>
-<div class="doc-title-box">
-<div class="doc-title">Delivery Note</div>
-<div class="doc-meta">DN No: <b>${g('dnNo').value || '—'}</b><br>Date: <b>${dnDateFmt}</b><br>Ref: ${g('dnRef').value || '—'}</div>
-</div>
-</div>
-
-<div class="info-grid">
-<div class="info-box">
-<div class="info-head">Bill To / Ship To</div>
-<div class="info-body">
-<div class="info-row"><span class="info-lbl">Customer:</span> <b>${g('custName').value || '—'}</b></div>
-<div class="info-row"><span class="info-lbl">Address:</span> ${g('custAddr').value || '—'}</div>
-<div class="info-row"><span class="info-lbl">Phone:</span> ${g('custPhone').value || '—'}</div>
-<div class="info-row"><span class="info-lbl">TRN:</span> <b>${g('custTRN').value || '—'}</b></div>
-<div class="info-row"><span class="info-lbl">Project:</span> ${g('custProj').value || '—'}</div>
-</div>
-</div>
-<div class="info-box">
-<div class="info-head">Currency & Tax</div>
-<div class="info-body">
-<div class="info-row"><span class="info-lbl">Currency:</span> <b>${c.symbol} - ${c.name}</b></div>
-<div class="info-row"><span class="info-lbl">Tax Rate:</span> <b>${taxRate}%</b></div>
-<div class="info-row"><span class="info-lbl">Seller TRN:</span> ${g('coTRN').value || '—'}</div>
-<div class="info-row"><span class="info-lbl">Buyer TRN:</span> ${g('custTRN').value || '—'}</div>
-</div>
-</div>
-</div>
-
-<table class="mat-table">
-<thead><tr>
-<th style="width:30px">#</th>
-<th class="left">Description</th>
-<th style="width:55px">Unit</th>
-<th style="width:70px">Quantity</th>
-<th style="width:80px">Rate (${c.symbol})</th>
-<th style="width:90px">Amount (${c.symbol})</th>
-</tr></thead>
-<tbody>${itemRows}</tbody>
-</table>
-
-<div class="summary-section">
-<table class="sum-table">
-<tr><td class="lbl">Subtotal</td><td class="val">${c.symbol} ${subtotal.toFixed(2)}</td></tr>
-<tr><td class="lbl">Tax (${taxRate}%)</td><td class="val">${c.symbol} ${taxAmt.toFixed(2)}</td></tr>
-<tr class="total-row"><td class="lbl">Grand Total</td><td class="val">${c.symbol} ${grandTotal.toFixed(2)}</td></tr>
-</table>
-</div>
-
-<div class="words-section">
-<div class="words-lbl">Amount in Words</div>
-<div class="words-val">${words}</div>
-</div>
-
-<div class="terms-section">
-<b>Terms:</b> Goods once sold will not be taken back or exchanged. Received the above goods in good condition.
-</div>
-
-<div class="sig-section">
-<div class="sig-box"><div class="sig-label">Receiver Signature</div><div class="sig-line"></div></div>
-<div class="sig-box"><div class="sig-label">Checked By</div><div class="sig-line"></div></div>
-<div class="sig-box"><div class="sig-label">Authorized Signature</div><div class="sig-line"></div></div>
-</div>
-</div>
-
-<div class="doc-footer">
-<span>Generated by <span class="footer-brand">Prodify</span> — Production Simplified &nbsp;|&nbsp; ${g('coName').value}</span>
-<span>DN: ${g('dnNo').value} &nbsp;|&nbsp; ${genDate} &nbsp;|&nbsp; Page 1 of 1</span>
-</div>
-
-<script>window.onload=function(){window.print()};<\/script>
-</body></html>`;
-
-  const w = window.open('','_blank');
-  w.document.write(html);
-  w.document.close();
-}
+});
 </script>
+
 </body>
 </html>
